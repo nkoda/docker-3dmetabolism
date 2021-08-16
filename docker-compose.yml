@@ -18,7 +18,7 @@ services:
       - mysql
     ports:
     # CONFIG - Change the 8181 here to expose Wikibase & MediaWiki on a different port
-     - "8080:80"
+     - "8181:80"
     volumes:
       - mediawiki-images-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
@@ -35,6 +35,7 @@ services:
       - DB_SERVER=mysql.svc:3306
       - MW_ELASTIC_HOST=elasticsearch.svc
       - MW_ELASTIC_PORT=9200
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:8181
       # CONFIG - Change the default values below
       - MW_ADMIN_NAME=Admin
       - MW_ADMIN_PASS=WikibaseDockerAdminPass
@@ -130,26 +131,26 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
   # CONFING, in order to not load quickstatements then remove this entire section
-  quickstatements:
-    image: wikibase/quickstatements:latest
-    ports:
-     - "9191:80"
-    depends_on:
-     - wikibase
-    volumes:
-     - quickstatements-data:/quickstatements/data
-    networks:
-      default:
-        aliases:
-         - quickstatements.svc
-    environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:8181
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
-      - WB_PROPERTY_NAMESPACE=122
-      - "WB_PROPERTY_PREFIX=Property:"
-      - WB_ITEM_NAMESPACE=120
-      - "WB_ITEM_PREFIX=Item:"
+#  quickstatements:
+  # image: wikibase/quickstatements:latest
+  #  ports:
+  #   - "9191:80"
+  #  depends_on:
+  #   - wikibase
+  #  volumes:
+  #   - quickstatements-data:/quickstatements/data
+  #  networks:
+  #    default:
+  #      aliases:
+  #       - quickstatements.svc
+  #  environment:
+  #    - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
+  #    - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:8181
+ #     - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
+  #    - WB_PROPERTY_NAMESPACE=122
+  #    - "WB_PROPERTY_PREFIX=Property:"
+  #    - WB_ITEM_NAMESPACE=120
+   #   - "WB_ITEM_PREFIX=Item:"
 
 volumes:
   mediawiki-mysql-data:
